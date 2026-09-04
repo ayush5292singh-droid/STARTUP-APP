@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#07100c">
+
+  <title>NEXORA — Find Help Nearby</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-mark">N</div>
+
+      <div>
+        <div class="brand-name">NEXORA</div>
+        <div class="brand-sub">LOCAL INTELLIGENCE</div>
+      </div>
+    </div>
+
+    <nav>
+      <button class="nav active" data-page="home">
+        <span>⌂</span>
+        Home
+      </button>
+
+      <button class="nav" data-page="discover">
+        <span>⌕</span>
+        Discover
+      </button>
+
+      <button class="nav" data-page="helpers">
+        <span>♙</span>
+        My Helpers
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="location-mini">
+        <span class="green-dot"></span>
+        <div>
+          <small>LOCATION</small>
+          <strong id="locationMini">Not detected</strong>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+
+      <div>
+        <div class="top-kicker">NEXORA NETWORK</div>
+        <div class="top-title" id="pageTitle">Home</div>
+      </div>
+
+      <button class="top-location" id="topLocate">
+        <span>●</span>
+        <span id="topLocationText">Locate me</span>
+      </button>
+
+    </header>
+
+
+    <!-- HOME -->
+    <section class="page active" id="page-home">
+
+      <div class="hero">
+
+        <div class="hero-copy">
+
+          <div class="eyebrow">
+            <span></span>
+            REAL-WORLD DISCOVERY
+          </div>
+
+          <h1>
+            Find what you need.<br>
+            <em>Nearby.</em>
+          </h1>
+
+          <p>
+            Search real places and services around your current location.
+            No business name required.
+          </p>
+
+          <div class="hero-buttons">
+
+            <button class="primary-btn" id="heroDiscover">
+              FIND A HELPER
+              <span>→</span>
+            </button>
+
+            <button class="secondary-btn" id="heroLocate">
+              <span>◎</span>
+              LOCATE ME
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="radar">
+
+          <div class="radar-ring ring1"></div>
+          <div class="radar-ring ring2"></div>
+          <div class="radar-ring ring3"></div>
+
+          <div class="radar-center">
+            <div class="radar-pulse"></div>
+            <span>YOU</span>
+          </div>
+
+          <div class="radar-point p1"></div>
+          <div class="radar-point p2"></div>
+          <div class="radar-point p3"></div>
+
+        </div>
+
+      </div>
+
+
+      <div class="quick-grid">
+
+        <button class="quick-card" data-search="pharmacy">
+          <span>✚</span>
+          <strong>Pharmacy</strong>
+          <small>Find nearby</small>
+        </button>
+
+        <button class="quick-card" data-search="hardware shop">
+          <span>⚙</span>
+          <strong>Hardware</strong>
+          <small>Find nearby</small>
+        </button>
+
+        <button class="quick-card" data-search="plumber">
+          <span>⌁</span>
+          <strong>Plumber</strong>
+          <small>Find nearby</small>
+        </button>
+
+        <button class="quick-card" data-search="electrician">
+          <span>ϟ</span>
+          <strong>Electrician</strong>
+          <small>Find nearby</small>
+        </button>
+
+      </div>
+
+
+      <div class="info-strip">
+        <div class="info-icon">✓</div>
+        <div>
+          <strong>Real locations. Real map.</strong>
+          <p>
+            NEXORA searches OpenStreetMap data around your GPS position.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- DISCOVER -->
+    <section class="page" id="page-discover">
+
+      <div class="discover-head">
+
+        <div>
+          <div class="eyebrow">
+            <span></span>
+            DISCOVERY ENGINE
+          </div>
+
+          <h2>Search nearby</h2>
+
+          <p>
+            Tell NEXORA what you need. We'll search around your location.
+          </p>
+        </div>
+
+      </div>
+
+
+      <!-- SEARCH PANEL -->
+      <div class="search-panel">
+
+        <div class="search-main">
+
+          <label>WHAT DO YOU NEED?</label>
+
+          <div class="search-input-wrap">
+
+            <span>⌕</span>
+
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="Pharmacy, hardware shop, plumber..."
+              autocomplete="off"
+            >
+
+            <button id="clearSearch" class="clear-btn">×</button>
+
+          </div>
+
+          <div class="suggestions">
+
+            <button data-suggestion="pharmacy">Pharmacy</button>
+            <button data-suggestion="hardware shop">Hardware</button>
+            <button data-suggestion="plumber">Plumber</button>
+            <button data-suggestion="electrician">Electrician</button>
+            <button data-suggestion="mechanic">Mechanic</button>
+            <button data-suggestion="grocery store">Grocery</button>
+
+          </div>
+
+        </div>
+
+
+        <div class="filter">
+
+          <label>MIN RATING</label>
+
+          <select id="ratingFilter">
+            <option value="0">Any rating</option>
+            <option value="3">3.0+</option>
+            <option value="4">4.0+</option>
+            <option value="4.5">4.5+</option>
+          </select>
+
+        </div>
+
+
+        <div class="filter">
+
+          <label>DISTANCE</label>
+
+          <select id="distanceFilter">
+            <option value="1">1 km</option>
+            <option value="2">2 km</option>
+            <option value="5" selected>5 km</option>
+            <option value="10">10 km</option>
+            <option value="25">25 km</option>
+          </select>
+
+        </div>
+
+
+        <button class="locate-btn" id="locateBtn">
+          <span>◎</span>
+          LOCATE
+        </button>
+
+
+        <button class="search-btn" id="searchBtn">
+          SEARCH
+          <span>→</span>
+        </button>
+
+      </div>
+
+
+      <!-- STATUS -->
+      <div class="status-bar">
+
+        <div class="status-left">
+
+          <span class="status-dot" id="statusDot"></span>
+
+          <span id="searchStatus">
+            Ready to search
+          </span>
+
+        </div>
+
+        <div class="result-count" id="resultCount">
+          0 results
+        </div>
+
+      </div>
+
+
+      <!-- MAP -->
+      <div class="map-shell">
+
+        <div id="map"></div>
+
+        <div class="map-overlay">
+
+          <button id="mapLocate" title="Locate me">
+            ◎
+          </button>
+
+          <button id="mapZoomIn" title="Zoom in">
+            +
+          </button>
+
+          <button id="mapZoomOut" title="Zoom out">
+            −
+          </button>
+
+        </div>
+
+        <div class="map-location-label" id="mapLocationLabel">
+          Location not detected
+        </div>
+
+      </div>
+
+
+      <!-- RESULTS -->
+      <div class="results-head">
+
+        <div>
+          <span class="eyebrow small">
+            <span></span>
+            DISCOVERED PLACES
+          </span>
+
+          <h3>Nearby results</h3>
+        </div>
+
+      </div>
+
+      <div id="results" class="results">
+
+        <div class="empty-state">
+
+          <div class="empty-icon">⌕</div>
+
+          <h3>Nothing searched yet</h3>
+
+          <p>
+            Allow location access, enter what you need,
+            then press SEARCH.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- HELPERS -->
+    <section class="page" id="page-helpers">
+
+      <div class="discover-head">
+
+        <div>
+          <div class="eyebrow">
+            <span></span>
+            PRIVATE DIRECTORY
+          </div>
+
+          <h2>My Helpers</h2>
+
+          <p>
+            Save people and services you trust on this device.
+          </p>
+        </div>
+
+        <button class="primary-btn small-btn" id="addHelperBtn">
+          + ADD HELPER
+        </button>
+
+      </div>
+
+      <div id="helpersList" class="helpers-list"></div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+
+  <button class="mobile-nav-btn active" data-page="home">
+    <span>⌂</span>
+    Home
+  </button>
+
+  <button class="mobile-nav-btn" data-page="discover">
+    <span>⌕</span>
+    Discover
+  </button>
+
+  <button class="mobile-nav-btn" data-page="helpers">
+    <span>♙</span>
+    Helpers
+  </button>
+
+</nav>
+
+
+<!-- HELPER MODAL -->
+<div class="modal" id="helperModal">
+
+  <div class="modal-card">
+
+    <button class="modal-close" id="closeHelperModal">×</button>
+
+    <div class="eyebrow">
+      <span></span>
+      PRIVATE HELPER
+    </div>
+
+    <h2>Add helper</h2>
+
+    <div class="form-grid">
+
+      <div class="form-field">
+        <label>Name</label>
+        <input id="helperName" placeholder="e.g. Raj Plumbing">
+      </div>
+
+      <div class="form-field">
+        <label>Service</label>
+        <input id="helperService" placeholder="e.g. Plumber">
+      </div>
+
+      <div class="form-field">
+        <label>Phone</label>
+        <input id="helperPhone" type="tel" placeholder="Phone number">
+      </div>
+
+      <div class="form-field">
+        <label>Area</label>
+        <input id="helperArea" placeholder="Area / locality">
+      </div>
+
+      <div class="form-field full">
+        <label>Notes</label>
+        <textarea id="helperNotes" placeholder="Anything you want to remember"></textarea>
+      </div>
+
+    </div>
+
+    <button class="primary-btn full-btn" id="saveHelper">
+      SAVE HELPER
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- LOADING -->
+<div class="loading-screen" id="loadingScreen">
+
+  <div class="loader-ring"></div>
+
+  <strong id="loadingTitle">
+    Finding your location
+  </strong>
+
+  <span id="loadingText">
+    Please allow GPS permission...
+  </span>
+
+</div>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
